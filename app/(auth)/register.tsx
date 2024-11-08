@@ -6,12 +6,17 @@ import { Octicons, SimpleLineIcons } from "@expo/vector-icons"
 import { useRouter } from 'expo-router'
 import CustomKeyBoardView from '@/src/components/CustomKeyBoardView'
 import { useAuth } from '@/src/context/authContext'
+import ConfigurationAdicional from '@/src/components/ConfigurationAdicional'
+import { UserRegisterWithConfig } from '@/src/utils/types'
 
 const SignUp = () => {
 
   const {register} = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
+
+  const [next, setNext] = useState<boolean>(false)
+  const [user, setUser] = useState<UserRegisterWithConfig | null>(null)
 
   const emailRef = useRef<string>("")
   const passwordRef = useRef<string>("")
@@ -27,22 +32,18 @@ const SignUp = () => {
       password: passwordRef.current,
       username: usernameRef.current,
     }
-    setLoading(true)
-    let response: any = await register(user)
-    setLoading(false)
-    console.log(response)
-    if (!response.succes){
-      // manegar los errores de register
-      alert(response.error)
-    } else {
-      // redireccionar el usuario a la pagina de inicio
-      router.navigate("/(tabs)/")
-    }
+    setNext(true)
+    setUser(user)
 
   }
 
   return (
-    <CustomKeyBoardView>
+    <>
+    {
+      next ? (
+        <ConfigurationAdicional user={user} />
+      ):(
+        <CustomKeyBoardView>
       <View className='gap-4 flex-1 p-6'
         style={{marginTop: hp(10)}}
       >
@@ -120,6 +121,10 @@ const SignUp = () => {
         </View>
       </View>
     </CustomKeyBoardView>
+      )
+    }
+    </>
+    
   )
 }
 

@@ -15,3 +15,8 @@ export type UserRegister = {
     password: string;
     username: string;
 }
+
+export type UserRegisterWithConfig = UserRegister & {
+    pais?: string;
+    idioma?: string;
+}

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { User, UserLogin, UserRegister } from "@/src/utils/types";
+import { User, UserLogin, UserRegister, UserRegisterWithConfig } from "@/src/utils/types";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseAuth, firestoreDB } from "@/firebaseConfig";
 import {doc, getDoc, setDoc} from "firebase/firestore"
@@ -53,7 +53,7 @@ export const AuthContextProvider = ({ children }: {children: React.ReactNode}) =
     }
   }
 
-  const register = async (userRegister: UserRegister) => {
+  const register = async (userRegister: UserRegisterWithConfig) => {
     console.log(userRegister)
     try {
       const response = await createUserWithEmailAndPassword(firebaseAuth, userRegister.email, userRegister.password)
@@ -62,6 +62,8 @@ export const AuthContextProvider = ({ children }: {children: React.ReactNode}) =
       await setDoc(doc(firestoreDB, 'users', response?.user?.uid), {
         username: userRegister.username,
         userId: response?.user?.uid,
+        idioma: userRegister.idioma,
+        pais: userRegister.pais
       })
       
       setIsAuthenticated(true)
