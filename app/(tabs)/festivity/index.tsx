@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Pressable, Image } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
-import { firestoreDB } from "../../firebaseConfig";
+import { firestoreDB } from "../../../firebaseConfig";
+import { useRouter } from "expo-router";
 
 const Festivity = () => {
   interface Festividad {
@@ -12,6 +13,7 @@ const Festivity = () => {
   }
 
   const [festividades, setFestividades] = useState<Festividad[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFestividades = async () => {
@@ -41,10 +43,11 @@ const Festivity = () => {
       <FlatList
         data={festividades}
         keyExtractor={(item) => item.id}
-        className="w-full"
+        showsHorizontalScrollIndicator={false}
+        horizontal
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => {}}
+            onPress={() => router.push(`/festivity/${item.id}`)}
             style={({ pressed }) => ({
               marginBottom: 16,
               backgroundColor: pressed ? "#f3f4f6" : "white",
