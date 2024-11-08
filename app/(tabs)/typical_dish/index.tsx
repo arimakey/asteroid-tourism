@@ -4,50 +4,46 @@ import { collection, getDocs } from "firebase/firestore";
 import { firestoreDB } from "../../../firebaseConfig";
 import { useRouter } from "expo-router";
 
-const Festivity = () => {
-  interface Festividad {
+const TypicalDish = () => {
+  interface TypicalDish {
     id: string;
     nombre: string;
-    lugar: string;
-    imagen: string;
   }
 
-  const [festividades, setFestividades] = useState<Festividad[]>([]);
+  const [TypicalDish, setTypicalDish] = useState<TypicalDish[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchFestividades = async () => {
+    const fetchTypicalDish = async () => {
       const querySnapshot = await getDocs(
-        collection(firestoreDB, "festividades")
+        collection(firestoreDB, "comidas")
       );
-      const festividadesData = querySnapshot.docs.map(
+      const typicalDishData = querySnapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             nombre: doc.data().nombre,
-            lugar: doc.data().lugar,
-            imagen: doc.data().imagen,
-          } as Festividad)
+          } as TypicalDish)
       );
-      setFestividades(festividadesData);
+      setTypicalDish(typicalDishData);
     };
 
-    fetchFestividades();
+    fetchTypicalDish();
   }, []);
 
   return (
     <View className="flex-1 p-5 bg-gray-50">
       <Text className="text-3xl font-bold mb-6 text-gray-800">
-        Festividades
+        Plato típicos
       </Text>
       <FlatList
-        data={festividades}
+        data={TypicalDish}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         horizontal
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => router.push(`/festivity/${item.id}`)}
+            onPress={() => router.push(`/typical_dish/${item.id}`)}
             style={({ pressed }) => ({
               marginBottom: 16,
               backgroundColor: pressed ? "#f3f4f6" : "white",
@@ -65,13 +61,7 @@ const Festivity = () => {
           >
             <View>
               <Image
-                source={{ uri: item.imagen }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 16,
-                  marginBottom: 12,
-                }}
+                
               />
               <Text
                 style={{
@@ -84,15 +74,7 @@ const Festivity = () => {
                 {item.nombre}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text
-                  style={{
-                    marginLeft: 4,
-                    color: "#4b5563",
-                    fontSize: 14,
-                  }}
-                >
-                  {item.lugar}
-                </Text>
+                
               </View>
             </View>
           </Pressable>
@@ -103,4 +85,4 @@ const Festivity = () => {
   );
 };
 
-export default Festivity;
+export default TypicalDish;
