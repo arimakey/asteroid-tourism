@@ -4,50 +4,46 @@ import { collection, getDocs } from "firebase/firestore";
 import { firestoreDB } from "../../../firebaseConfig";
 import { useRouter } from "expo-router";
 
-const Festivity = () => {
-  interface Festividad {
+const Places = () => {
+  interface Places {
     id: string;
     name: string;
-    city: string;
-    image: string;
   }
 
-  const [festividades, setFestividades] = useState<Festividad[]>([]);
+  const [places, setPlaces] = useState<Places[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchFestividades = async () => {
-      const querySnapshot = await getDocs(
-        collection(firestoreDB, "festivities")
-      );
-      const festividadesData = querySnapshot.docs.map(
+    const fetchPlaces = async () => {
+      const querySnapshot = await getDocs(collection(firestoreDB, "places"));
+      console.log
+      const placesData = querySnapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             name: doc.data().name,
-            city: doc.data().city,
-            image: doc.data().image,
-          } as Festividad)
+          } as Places)
       );
-      setFestividades(festividadesData);
+      setPlaces(placesData);
+      console.log(placesData);
     };
 
-    fetchFestividades();
+    fetchPlaces();
   }, []);
 
   return (
     <View className="flex-1 p-5 bg-gray-50">
       <Text className="text-3xl font-bold mb-6 text-gray-800">
-        Festividades
+        Lugares para visitar
       </Text>
       <FlatList
-        data={festividades}
+        data={places}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         horizontal
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => router.push(`/festivity/${item.id}`)}
+            onPress={() => router.push(`/places/${item.id}`)}
             style={({ pressed }) => ({
               marginBottom: 16,
               backgroundColor: pressed ? "#f3f4f6" : "white",
@@ -64,15 +60,6 @@ const Festivity = () => {
             })}
           >
             <View>
-              <Image
-                source={{ uri: item.image }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 16,
-                  marginBottom: 12,
-                }}
-              />
               <Text
                 style={{
                   fontSize: 18,
@@ -90,9 +77,7 @@ const Festivity = () => {
                     color: "#4b5563",
                     fontSize: 14,
                   }}
-                >
-                  {item.city}
-                </Text>
+                ></Text>
               </View>
             </View>
           </Pressable>
@@ -103,4 +88,4 @@ const Festivity = () => {
   );
 };
 
-export default Festivity;
+export default Places;

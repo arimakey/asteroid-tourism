@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/src/context/authContext";
 import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
+import Places from "@/app/(tabs)/places/index";
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -32,7 +33,7 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
-      <TypicalDish />
+      <Places />
       <View className="gap-2">
         <Text className="font-bold">
           Welcome {user?.username.toLocaleUpperCase()}
