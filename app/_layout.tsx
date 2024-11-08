@@ -1,38 +1,40 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+
+import { View, Text } from 'react-native'
+import React, { useEffect } from 'react'
+import { Slot, useRouter, useSegments } from "expo-router";
 import "../global.css";
+import { AuthContextProvider, useAuth } from '@/src/context/authContext';
+import LoadingBasic from '@/src/components/LoadingBasic';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+const MainLayout = () => {
+  const {isAuthenticated} = useAuth()
+  const segments = useSegments()
+  const route = useRouter()
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+
+    // check if user is authenticated or not
+    if (typeof isAuthenticated === 'undefined') return
+    const inApp = segments[0]?.startsWith('(app)')
+    if (isAuthenticated && !inApp) {
+      route.navigate("/(tabs)/")
+    } else if (isAuthenticated == false){
+      route.navigate("/(auth)/login")
     }
-  }, [loaded]);
+  }, [isAuthenticated])
 
-  if (!loaded) {
-    return null;
-  }
+  if (typeof isAuthenticated === 'undefined') return <LoadingBasic />
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+  return <Slot />
+
 }
+
+const RootLayout = () => {
+  return (
+    <AuthContextProvider>
+      <MainLayout />
+    </AuthContextProvider>
+  )
+}
+
+export default RootLayout
