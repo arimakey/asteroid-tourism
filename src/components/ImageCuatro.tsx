@@ -37,7 +37,8 @@ container: {
 },
 smallImagesColumn: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 8,
 },
 smallImage: {

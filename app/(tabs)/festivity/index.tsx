@@ -64,7 +64,7 @@ const Festivity = () => {
             })}
           >
             <View>
-              <Image
+              {/* <Image
                 source={{ uri: item.image }}
                 style={{
                   width: "100%",
@@ -72,7 +72,7 @@ const Festivity = () => {
                   borderRadius: 16,
                   marginBottom: 12,
                 }}
-              />
+              /> */}
               <Text
                 style={{
                   fontSize: 18,
