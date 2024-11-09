@@ -8,8 +8,8 @@ import { useAuth } from '@/src/context/authContext'
 import { hp, wp } from '@/src/helpers/common'
 
 type Schedule = {
-    end_time: string;
-    start_time: string;
+    endTime: string;
+    startTime: string;
     type: string;
     id: string;
     image: string;
@@ -73,6 +73,8 @@ const ItinerarioResultados = ({goToFinal}: {goToFinal: () => void}) => {
 
               <View key={key} className=''>
                 <Text style={{fontSize: hp(2)}}>{schedule.name}</Text>
+                <Text style={{fontSize: hp(1.8), color: "#555"}}>Start: {schedule.startTime}</Text>
+                <Text style={{fontSize: hp(1.8), color: "#555"}}>End: {schedule.endTime}</Text>
                 <Image source={{uri: schedule.image}} style={{width: wp(100), objectFit: "cover", height: hp(15)}} />
               </View>
             ))}

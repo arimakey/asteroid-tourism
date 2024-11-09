@@ -1,6 +1,6 @@
 
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Step1Index from '@/src/components/step1/index'
 import Step2Categorias from '@/src/components/step2/Step2Categorias'
 import Ste3Preguntas from "@/src/components/step3/Step3Preguntas"
@@ -14,6 +14,10 @@ const IndexItinerario = () => {
   const goToNextStep = () => {
     setCurrentStep((prevStep)=> prevStep + 1)
   }
+
+  useEffect(() => {
+    console.log(currentStep)
+  }, [currentStep])
 
   const goToPreviousStep = () => {
     setCurrentStep((prevStep)=> prevStep - 1)
