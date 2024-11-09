@@ -15,6 +15,7 @@ import { useAuth } from "@/src/context/authContext";
 import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
 import Places from "@/app/(tabs)/places/index";
+import Step1  from "@/src/components/step1/index";
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -34,6 +35,7 @@ export default function HomeScreen() {
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
       <View className="gap-2">
+        <Step1 />
         <Text className="font-bold">
         </Text>
         <Text className="text-neutral-600">{user?.email}</Text>
