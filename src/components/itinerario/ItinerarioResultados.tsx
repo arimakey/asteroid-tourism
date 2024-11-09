@@ -1,5 +1,5 @@
 
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { firestoreDB } from '@/firebaseConfig'
@@ -19,7 +19,7 @@ type Schedule = {
 type Days = Schedule[][]
 
 
-const ItinerarioResultados = () => {
+const ItinerarioResultados = ({goToFinal}: {goToFinal: () => void}) => {
   const {user} = useAuth();
   const [results, setResults] = useState<Schedule[][]>([]);
   useEffect(() => {
@@ -79,6 +79,9 @@ const ItinerarioResultados = () => {
           </View>
         ))}
       </View>
+      <TouchableOpacity style={{backgroundColor: "#1f2937", padding:4}} onPress={()=>{goToFinal()}}>
+                <Text style={{color: "white", textAlign: "center"}}>Guardar y continuar</Text>
+      </TouchableOpacity>
     </View>
   )
 }

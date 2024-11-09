@@ -56,7 +56,7 @@ const Home = () => {
           >
             <Menu.Item onPress={(e) => {router.navigate("/(tabs)/itinerario"); e.preventDefault()}} title="Itinerario" titleStyle={{color: "black"}} rippleColor={"#EDEDED"} />
             <Divider />
-            <Menu.Item onPress={() => {}} title="Recompenzas" titleStyle={{color: "black"}} rippleColor={"#EDEDED"}/>
+            <Menu.Item onPress={() => {router.navigate("/(tabs)/recompensas")}} title="Recompenzas" titleStyle={{color: "black"}} rippleColor={"#EDEDED"}/>
           </Menu>
 
         </View>

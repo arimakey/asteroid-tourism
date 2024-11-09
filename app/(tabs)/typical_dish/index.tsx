@@ -16,13 +16,14 @@ const TypicalDish = () => {
   useEffect(() => {
     const fetchTypicalDish = async () => {
       const querySnapshot = await getDocs(
-        collection(firestoreDB, "comidas")
+        collection(firestoreDB, "foods")
       );
       const typicalDishData = querySnapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             nombre: doc.data().nombre,
+            image: doc.data().image,
           } as TypicalDish)
       );
       setTypicalDish(typicalDishData);

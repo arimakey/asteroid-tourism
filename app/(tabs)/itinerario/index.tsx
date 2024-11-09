@@ -19,6 +19,10 @@ const IndexItinerario = () => {
     setCurrentStep((prevStep)=> prevStep - 1)
   }
 
+  const goTiFinal = () => {
+    setCurrentStep(1)
+  }
+
   return (
     <View className='p-10 flex-1'>
       {
@@ -53,7 +57,7 @@ const IndexItinerario = () => {
       {
         currentStep === 6 && (
           <View className='flex-1 justify-center items-center'>
-            <ItinerarioResultados />
+            <ItinerarioResultados goToFinal ={goTiFinal}/>
           </View>
         )
       }
