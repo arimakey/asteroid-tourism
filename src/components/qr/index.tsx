@@ -91,7 +91,11 @@ export default function QrScanner() {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center bg-black justify-center py-20">
+    <SafeAreaView className="flex-1 items-center bg-black justify-center py-20"
+      style={{
+        backgroundColor: "black",
+      }}
+    >
       <Text className="text-white text-2xl mb-5">QR Code Scanner</Text>
       <View className="space-y-5">
         {!isPermissionGranted ? (

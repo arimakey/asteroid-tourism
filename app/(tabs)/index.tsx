@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import "@/global.css";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -15,7 +16,6 @@ import { useAuth } from "@/src/context/authContext";
 import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
 import Places from "@/app/(tabs)/places/index";
-import SwipeCard from "@/src/components/step3/pagina3"
 import QrScanner from "@/src/components/qr";
 
 export default function HomeScreen() {
@@ -36,7 +36,6 @@ export default function HomeScreen() {
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
       <View className="gap-2">
-        <QrScanner/>
         <Text className="font-bold">
         </Text>
         <Text className="text-neutral-600">{user?.email}</Text>
@@ -50,7 +49,7 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
-      <SwipeCard/>
+      <QrScanner/>
     </View>
   );
 }
