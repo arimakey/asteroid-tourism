@@ -35,7 +35,6 @@ export default function HomeScreen() {
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
       <View className="gap-2">
-        <Step1 />
         <Text className="font-bold">
         </Text>
         <Text className="text-neutral-600">{user?.email}</Text>
