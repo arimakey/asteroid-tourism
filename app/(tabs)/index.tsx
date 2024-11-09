@@ -34,10 +34,9 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
-      <Places />
       <View className="gap-2">
+        <Step1 />
         <Text className="font-bold">
-          Welcome {user?.username.toLocaleUpperCase()}
         </Text>
         <Text className="text-neutral-600">{user?.email}</Text>
         <Text className="text-neutral-600">{user?.uid}</Text>

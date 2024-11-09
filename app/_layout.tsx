@@ -15,9 +15,12 @@ const MainLayout = () => {
 
     // check if user is authenticated or not
     if (typeof isAuthenticated === 'undefined') return
-    const inApp = segments[0]?.startsWith('(app)')
-    if (isAuthenticated && !inApp) {
+    const inApp = segments[0]?.startsWith('(tabs)')
+    if (isAuthenticated && inApp) {
+
+    } else if (isAuthenticated && !inApp) {
       route.navigate("/(tabs)/")
+      console.log("cambio de ruta ")
     } else if (isAuthenticated == false){
       route.navigate("/(auth)/login")
     }

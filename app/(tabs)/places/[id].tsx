@@ -6,7 +6,6 @@ import { firestoreDB } from "../../../firebaseConfig";
 
 interface Places {
   name: string;
-  city: any;
   description: string;
 }
 
@@ -15,7 +14,7 @@ const PlacesDetail = () => {
   const [places, setPlaces] = useState<Places| null>(null);
 
   useEffect(() => {
-    const fetchFestividad = async () => {
+    const fetchPlaces = async () => {
       if (id) {
         const docRef = doc(firestoreDB, "places", id as string);
         const docSnap = await getDoc(docRef);
@@ -27,7 +26,7 @@ const PlacesDetail = () => {
       }
     };
 
-    fetchFestividad();
+    fetchPlaces();
   }, [id]);
 
   if (!places) {
@@ -41,7 +40,7 @@ const PlacesDetail = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{places.name}</Text>
-      <Text style={styles.location}>{places.city.name}</Text>
+      
     </View>
   );
 };
@@ -68,10 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1f2937",
     marginBottom: 8,
-  },
-  location: {
-    fontSize: 18,
-    color: "#4b5563",
   },
 });
 
