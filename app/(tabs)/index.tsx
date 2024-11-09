@@ -16,7 +16,7 @@ import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
 import Places from "@/app/(tabs)/places/index";
 import SwipeCard from "@/src/components/step3/pagina3"
-import QRScanner from "@/src/components/qr/index";
+import QrScanner from "@/src/components/qr";
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -36,10 +36,21 @@ export default function HomeScreen() {
     <View className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
       <View className="gap-2">
-        <QRScanner/>
-        
+        <QrScanner/>
+        <Text className="font-bold">
+        </Text>
+        <Text className="text-neutral-600">{user?.email}</Text>
+        <Text className="text-neutral-600">{user?.uid}</Text>
       </View>
-      
+      <View className="flex-row">
+        <TouchableOpacity
+          className="px-4 py-1 rounded-md bg-cyan-700 "
+          onPress={handleLogout}
+        >
+          <Text className="text-white">Logout</Text>
+        </TouchableOpacity>
+      </View>
+      <SwipeCard/>
     </View>
   );
 }

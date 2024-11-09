@@ -26,7 +26,7 @@ interface Seleccion {
     [key: string]: any; // Permite otros campos adicionales que pueden estar en el documento
 }
 
-const TouristPlaces: React.FC = () => {
+const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
     const { user } = useAuth();
     const [data, setData] = useState<TouristPlace[]>([]);
     const [progress, setProgress] = useState(0);
@@ -110,8 +110,8 @@ const TouristPlaces: React.FC = () => {
                 // Si encontramos el documento, lo actualizamos
                 const selectionRef = doc(firestoreDB, "selections", documentId);
 
-                const likes = data.filter((place) => place.selected === true).map((place) => place.name);
-                const unlikes = data.filter((place) => place.selected === false).map((place) => place.name);
+                const likes = data.filter((place) => place.selected === true).map((place) => doc(firestoreDB, "places", place.id));
+                const unlikes = data.filter((place) => place.selected === false).map((place) => doc(firestoreDB, "places", place.id));
 
                 await setDoc(
                     selectionRef,
@@ -126,6 +126,7 @@ const TouristPlaces: React.FC = () => {
                 );
 
                 Alert.alert("Éxito", "Tus selecciones se han guardado en Firebase");
+                goToNextStep();
             } else {
                  // Si no encontramos el documento, mostramos un mensaje de error
                 Alert.alert("Error", "No se encontró el documento de selección para este usuario.");

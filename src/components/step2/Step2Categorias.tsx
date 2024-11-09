@@ -9,7 +9,7 @@ type Categoria = {
   name: string;
 };
 
-const Step2Categorias: React.FC = () => {
+const Step2Categorias = ({goToNextStep}: {goToNextStep: () => void}) => {
   const {user} = useAuth()
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [selectedCategorias, setSelectedCategorias] = useState<string[]>([]);
@@ -37,6 +37,49 @@ const Step2Categorias: React.FC = () => {
     }
   };
 
+  const handleEnviarWithReferences = async () => {
+    if (!user) {
+      alert("Usuario no autenticado");
+      return;
+    }
+
+    try {
+      const userRef = doc(firestoreDB, "users", user.uid);
+      const selectionRef = collection(firestoreDB, "selections");
+
+      const q = query(selectionRef, where("user", "==", userRef));
+
+      const snapshot = await getDocs(q);
+        
+      const selections: any = [];
+      snapshot.forEach((doc) => {
+        selections.push({ id: doc.id, ...doc.data() });
+      })
+
+      const documentId = selections[0]?.id
+
+      if (documentId) {
+        // Si encontramos el documento, actualizamos los campos `categories` y `step`
+        const selectionRef = doc(firestoreDB, "selections", documentId);
+        
+
+        await updateDoc(
+          selectionRef,
+          {
+            step: 2,
+            categories: selectedCategorias.map(name => doc(firestoreDB, "categories", name)),
+          }
+        );
+
+        alert("Categorías guardadas exitosamente en selections!");
+        goToNextStep();
+      }
+
+    } catch (error) {
+      alert("Error al guardar categorías en selections.");
+    }
+  }
+
   const handleEnviar = async () => {
     if (!user) {
       alert("Usuario no autenticado");
@@ -44,21 +87,41 @@ const Step2Categorias: React.FC = () => {
     }
 
     try {
+
+      // Buscar el documento en Firestore que tenga el `user` referenciado con el ID del usuario actual
+      const selectionsQuery = await getDocs(collection(firestoreDB, "selections"));
+      let documentId = null;
+
+      selectionsQuery.forEach((doc) => {
+        if (doc.data().user === `/users/${user.uid}`) {
+          documentId = doc.id; // Guardar el ID del documento encontrado
+        }
+      });
+      console.log("Usuario actual ", user.uid)
+      console.log(documentId)
+
       // Definir la referencia del documento en Firestore
       const selectionRef = doc(firestoreDB, "selections", user.uid);
 
-      // Guardar las categorías seleccionadas y otros campos en el documento `selections`
+      if (documentId) {
+        // Si encontramos el documento, actualizamos los campos `categories` y `step`
+      const selectionRef = doc(firestoreDB, "selections", documentId);
+  
       await setDoc(
         selectionRef,
         {
-          user: `/users/${user.uid}`,
           step: 2,
-          categories: selectedCategorias.map(name => `/categories/${name}`), // Guardar las categorías seleccionadas
+          categories: selectedCategorias.map(name => `/categories/${name}`),
         },
-        { merge: true } // Usar merge para actualizar campos sin sobrescribir todo el documento
+        { merge: true } // Usar merge para actualizar sin sobrescribir todo el documento
       );
-
+  
       alert("Categorías guardadas exitosamente en selections!");
+      goToNextStep();
+      } else {
+        alert("No se encontró el documento de selección para este usuario.");
+      }
+
     } catch (error) {
       console.error("Error al guardar categorías en selections: ", error);
       alert("Error al guardar categorías en selections.");
@@ -76,11 +139,11 @@ const Step2Categorias: React.FC = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => handleSelectCategoria(item.name)}
+            onPress={() => handleSelectCategoria(item.id)}
             style={{
               padding: 10,
               marginVertical: 5,
-              backgroundColor: selectedCategorias.includes(item.name) ? '#d3d3d3' : '#f9f9f9',
+              backgroundColor: selectedCategorias.includes(item.id) ? '#d3d3d3' : '#f9f9f9',
             }}
           >
             <Text>{item.name}</Text>
@@ -89,7 +152,7 @@ const Step2Categorias: React.FC = () => {
       />
 
       {/* Botón para enviar las categorías seleccionadas */}
-      <Button title="Enviar" onPress={handleEnviar} />
+      <Button title="Enviar" onPress={handleEnviarWithReferences} />
     </View>
   );
 };
