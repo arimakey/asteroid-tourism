@@ -3,6 +3,7 @@ import { View, Text, FlatList, Pressable, Image } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { firestoreDB } from "../../../firebaseConfig";
 import { useRouter } from "expo-router";
+import ImageCuatro from "@/src/components/ImageCuatro";
 
 const Places = () => {
   interface Places {
@@ -83,6 +84,12 @@ const Places = () => {
           </Pressable>
         )}
         contentContainerClassName="pb-4"
+      />
+      <ImageCuatro 
+        image1="https://www.chullostravelperu.com/wp-content/uploads/2023/08/Ciudad-del-Cusco-lugares-turisticos.jpg"
+        image2="https://www.chullostravelperu.com/wp-content/uploads/2023/08/Ciudad-del-Cusco-lugares-turisticos.jpg"
+        image3="https://www.chullostravelperu.com/wp-content/uploads/2023/08/Ciudad-del-Cusco-lugares-turisticos.jpg"
+        image4="https://www.chullostravelperu.com/wp-content/uploads/2023/08/Ciudad-del-Cusco-lugares-turisticos.jpg"
       />
     </View>
   );
