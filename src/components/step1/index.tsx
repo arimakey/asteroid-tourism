@@ -11,8 +11,8 @@ const Step1 = ({goToNextStep}: {goToNextStep: () => void}) => {
   const [user, setUser] = useState<User | null>(null);
   const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
   const [selectedCity, setSelectedCity] = useState("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [showPicker, setShowPicker] = useState<{ visible: boolean; mode: "start" | "end" }>({
     visible: false,
     mode: "start",

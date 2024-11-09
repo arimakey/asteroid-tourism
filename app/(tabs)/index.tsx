@@ -37,7 +37,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView  className="flex-1 p-5 gap-4">
-      <Text>This is the page home</Text>
+      {/* <Text>This is the page home</Text>
       <View className="gap-2">
         <Text className="font-bold">
         </Text>
@@ -52,7 +52,8 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
-      <ItinerarioResultados />
+      <ItinerarioResultados /> */}
+      <Home />
     </ScrollView>
   );
 }
