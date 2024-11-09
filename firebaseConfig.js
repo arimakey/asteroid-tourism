@@ -1,6 +1,7 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection } from "firebase/firestore";
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAv87XwXYmQc8_9tmrPs4DcMMWbo_FvmIc",
@@ -15,8 +16,8 @@ const firebaseConfig = {
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(app);
 const firestoreDB = getFirestore(app);
-
+const functions = getFunctions(app);
 // Coleccion de datos donde se guardaran los usuarios
 const useRef = collection(firestoreDB, "users");
 
-export { app, firebaseAuth, firestoreDB, useRef };
+export { app, firebaseAuth, firestoreDB, useRef, functions, httpsCallable };

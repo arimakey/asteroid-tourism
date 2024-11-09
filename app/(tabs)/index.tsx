@@ -15,6 +15,7 @@ import { useAuth } from "@/src/context/authContext";
 import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
 import Places from "@/app/(tabs)/places/index";
+import SwipeCard from "@/src/components/step3/pagina3"
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -49,6 +50,7 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
+      <SwipeCard/>
     </View>
   );
 }
