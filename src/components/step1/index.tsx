@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
 import { firestoreDB } from "../../../firebaseConfig";
@@ -90,7 +90,11 @@ const Step1 = () => {
             ))}
           </Picker>
 
-          <Button title="Guardar" onPress={handleSaveUser} />
+          <TouchableOpacity onPress={handleSaveUser} 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          >
+            <Text style={styles.text}>Save User</Text>
+          </TouchableOpacity>
         </>
       ) : (
         <Text style={styles.text}>Usuario no logueado</Text>
