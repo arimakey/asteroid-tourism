@@ -6,6 +6,7 @@ import Step2Categorias from '@/src/components/step2/Step2Categorias'
 import Ste3Preguntas from "@/src/components/step3/Step3Preguntas"
 import Step4Foods from '@/src/components/step4/Step4Foods'
 import Step5FoodsPreguntas from '@/src/components/step5/Step5FoodsPreguntas'
+import ItinerarioResultados from '@/src/components/itinerario/ItinerarioResultados'
 const IndexItinerario = () => {
 
   const [currentStep, setCurrentStep] = useState(1)
@@ -52,7 +53,7 @@ const IndexItinerario = () => {
       {
         currentStep === 6 && (
           <View className='flex-1 justify-center items-center'>
-            <Text>Te recomendamos irte bien a la mrd {"<3"}</Text>
+            <ItinerarioResultados />
           </View>
         )
       }

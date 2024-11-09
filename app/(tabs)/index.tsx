@@ -5,19 +5,20 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
+import "@/global.css";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/src/context/authContext";
-import Step1Primis from "@/src/components/step1/index";
-import Step2Categorias from "@/src/components/step2/Step2Categorias";
-import Step3Preguntas from "@/src/components/step3/Step3Preguntas";
-import Step4Foods from "@/src/components/step4/Step4Foods";
-import Step5FoodsPreguntas from "@/src/components/step5/Step5FoodsPreguntas";
-
+import Festivity from "@/app/(tabs)/festivity/index";
+import TypicalDish from "@/app/(tabs)/typical_dish/index";
+import Places from "@/app/(tabs)/places/index";
+import QrScanner from "@/src/components/qr";
+import Home from "@/src/ui/Home";
 import ItinerarioResultados from "@/src/components/itinerario/ItinerarioResultados";
 
 export default function HomeScreen() {
@@ -35,7 +36,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View className="flex-1 p-5 gap-4">
+    <ScrollView  className="flex-1 p-5 gap-4">
       <Text>This is the page home</Text>
       <View className="gap-2">
         <Text className="font-bold">
@@ -52,7 +53,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
       <ItinerarioResultados />
-    </View>
+    </ScrollView>
   );
 }
 

@@ -1,44 +1,84 @@
 
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { firestoreDB } from '@/firebaseConfig'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import { useAuth } from '@/src/context/authContext'
+import { hp, wp } from '@/src/helpers/common'
 
 type Schedule = {
     end_time: string;
     start_time: string;
-    place: Place;
-}
-
-type Place = {
+    type: string;
     id: string;
+    image: string;
+    name: string;
 }
 
-type Day = {
-    schedule: Schedule[];
-}
+type Days = Schedule[][]
 
 
 const ItinerarioResultados = () => {
-  
-  const [days, setDays] = useState<Day[]>([])
-
+  const {user} = useAuth();
+  const [results, setResults] = useState<Schedule[][]>([]);
   useEffect(() => {
-    const fetchResultados = async () => {
-        const querySnapshot = await getDocs(collection(firestoreDB, "results"));
-        const resultadosArray:any = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...(doc.data() as Omit<any, 'id'>), // Esto asegura que `name` se tipifique correctamente
-        }));
-        //setDays(resultadosArray[0].days)
-        //console.log(days[0].schedule[0].place.id)
+    if (user?.uid) {
+      getItinerario(user.uid);
     }
-    fetchResultados()
   }, [])
+
+
+  const getItinerario = async (userId: string) => {
+    try {
+        const response = await fetch('https://generatemultidayitinerary-glxwkatvia-uc.a.run.app', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error en la respuesta de la API");
+        }
+
+        const result = await response.json();
+        setResults(result);
+        console.log(results[0][0])
+    } catch (error) {
+        console.error("Error fetching locations:", error);
+    }
+  };
+
+
   return (
-    <View>
-      <Text>Itinerario</Text>
+    <View className='pr-5'
+      style={{paddingRight: 5}}
+    >
+      <View>
+        <Text style={{fontSize: hp(3), fontWeight: 700}}>My Itinerary</Text>
+      </View>
+      <View>
+        {results.map((day, key)=> (
+          <View key={key}
+            style={{
+              backgroundColor: "#F3F3F3",
+              borderRadius: 10,
+              marginBottom: 25,
+            }}
+          >
+            <Text style={{fontSize: hp(3), color: "#0B7B74"}}>Day {key + 1}</Text>
+            {day.map((schedule, key) => (
+
+              <View key={key} className=''>
+                <Text style={{fontSize: hp(2)}}>{schedule.name}</Text>
+                <Image source={{uri: schedule.image}} style={{width: wp(100), objectFit: "cover", height: hp(15)}} />
+              </View>
+            ))}
+          </View>
+        ))}
+      </View>
     </View>
   )
 }
