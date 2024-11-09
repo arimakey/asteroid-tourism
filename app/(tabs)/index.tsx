@@ -15,6 +15,8 @@ import { useAuth } from "@/src/context/authContext";
 import Festivity from "@/app/(tabs)/festivity/index";
 import TypicalDish from "@/app/(tabs)/typical_dish/index";
 import Places from "@/app/(tabs)/places/index";
+import Step1  from "@/src/components/step1/index";
+import Step2Categorias from "@/src/components/step2/Step2Categorias";
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -47,6 +49,8 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
+      {/* <Step1 goToNextStep={()=>{}}/>
+      <Step2Categorias goToNextStep={()=>{}}/> */}
     </View>
   );
 }
