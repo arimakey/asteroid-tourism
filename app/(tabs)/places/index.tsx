@@ -9,6 +9,7 @@ const Places = () => {
   interface Places {
     id: string;
     name: string;
+    image:string;
   }
 
   const [places, setPlaces] = useState<Places[]>([]);
@@ -23,6 +24,7 @@ const Places = () => {
           ({
             id: doc.id,
             name: doc.data().name,
+            image:doc.data().image,
           } as Places)
       );
       setPlaces(placesData);
@@ -61,6 +63,10 @@ const Places = () => {
             })}
           >
             <View>
+              <Image
+                source={{uri:item.image}}
+                style={{width:100,height:100}}
+              ></Image>
               <Text
                 style={{
                   fontSize: 18,

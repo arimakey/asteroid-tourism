@@ -37,6 +37,49 @@ const Step2Categorias = ({goToNextStep}: {goToNextStep: () => void}) => {
     }
   };
 
+  const handleEnviarWithReferences = async () => {
+    if (!user) {
+      alert("Usuario no autenticado");
+      return;
+    }
+
+    try {
+      const userRef = doc(firestoreDB, "users", user.uid);
+      const selectionRef = collection(firestoreDB, "selections");
+
+      const q = query(selectionRef, where("user", "==", userRef));
+
+      const snapshot = await getDocs(q);
+        
+      const selections: any = [];
+      snapshot.forEach((doc) => {
+        selections.push({ id: doc.id, ...doc.data() });
+      })
+
+      const documentId = selections[0]?.id
+
+      if (documentId) {
+        // Si encontramos el documento, actualizamos los campos `categories` y `step`
+        const selectionRef = doc(firestoreDB, "selections", documentId);
+        
+
+        await updateDoc(
+          selectionRef,
+          {
+            step: 2,
+            categories: selectedCategorias.map(name => doc(firestoreDB, "categories", name)),
+          }
+        );
+
+        alert("Categorías guardadas exitosamente en selections!");
+        goToNextStep();
+      }
+
+    } catch (error) {
+      alert("Error al guardar categorías en selections.");
+    }
+  }
+
   const handleEnviar = async () => {
     if (!user) {
       alert("Usuario no autenticado");
@@ -96,11 +139,11 @@ const Step2Categorias = ({goToNextStep}: {goToNextStep: () => void}) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => handleSelectCategoria(item.name)}
+            onPress={() => handleSelectCategoria(item.id)}
             style={{
               padding: 10,
               marginVertical: 5,
-              backgroundColor: selectedCategorias.includes(item.name) ? '#d3d3d3' : '#f9f9f9',
+              backgroundColor: selectedCategorias.includes(item.id) ? '#d3d3d3' : '#f9f9f9',
             }}
           >
             <Text>{item.name}</Text>
@@ -109,7 +152,7 @@ const Step2Categorias = ({goToNextStep}: {goToNextStep: () => void}) => {
       />
 
       {/* Botón para enviar las categorías seleccionadas */}
-      <Button title="Enviar" onPress={handleEnviar} />
+      <Button title="Enviar" onPress={handleEnviarWithReferences} />
     </View>
   );
 };

@@ -5,7 +5,7 @@ import { doc, getDoc, setDoc, collection, getDocs , query, where} from 'firebase
 import { useAuth } from '@/src/context/authContext';
 import Swiper from 'react-native-deck-swiper';
 
-type TouristPlace = {
+type TouristFoods = {
     id: string;
     name: string;
     description: string;
@@ -14,7 +14,7 @@ type TouristPlace = {
 };
 
 interface SelectionData {
-    selections_places: {
+    selected_foods: {
         likes: string[];
         unlikes: string[];
     };
@@ -26,20 +26,20 @@ interface Seleccion {
     [key: string]: any; // Permite otros campos adicionales que pueden estar en el documento
 }
 
-const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
+const TouristFoods = ({ goToNextStep }: { goToNextStep: () => void }) => {
     const { user } = useAuth();
-    const [data, setData] = useState<TouristPlace[]>([]);
+    const [data, setData] = useState<TouristFoods[]>([]);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         if (user?.uid) {
-            getOptLocations(user.uid);
+            getOptFoods(user.uid);
         }
     }, [user]);
 
-    const getOptLocations = async (userId: string) => {
+    const getOptFoods = async (userId: string) => {
         try {
-            const response = await fetch('https://getoptlocations-glxwkatvia-uc.a.run.app', {
+            const response = await fetch('https://getoptfood-glxwkatvia-uc.a.run.app', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,18 +54,18 @@ const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
             const result = await response.json();
             setData(result);
         } catch (error) {
-            console.error("Error fetching locations:", error);
+            console.error("Error fetching foods:", error);
         }
     };
 
     const handleSwipe = (index: number, isLiked: boolean) => {
         if (index >= data.length) return;
 
-        const updatedData = data.map((place, idx) =>
-            idx === index ? { ...place, selected: isLiked } : place
+        const updatedData = data.map((food, idx) =>
+            idx === index ? { ...food, selected: isLiked } : food
         );
         setData(updatedData);
-        setProgress(updatedData.filter((place) => place.selected !== null).length);
+        setProgress(updatedData.filter((food) => food.selected !== null).length);
     };
 
         async function obtenerSeleccionesDeUsuario(userId: string) {
@@ -110,21 +110,21 @@ const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
                 // Si encontramos el documento, lo actualizamos
                 const selectionRef = doc(firestoreDB, "selections", documentId);
 
-                const likes = data.filter((place) => place.selected === true).map((place) => doc(firestoreDB, "places", place.id));
-                const unlikes = data.filter((place) => place.selected === false).map((place) => doc(firestoreDB, "places", place.id));
+                const likes = data.filter((food) => food.selected === true).map((food) => doc(firestoreDB, "food_categories", food.id));
+                const unlikes = data.filter((food) => food.selected === false).map((food) => doc(firestoreDB, "food_categories", food.id));
 
                 await setDoc(
                     selectionRef,
                     {
-                        selection_places: {
+                        selected_foods: {
                             likes,
                             unlikes,
                         },
-                        step: 3,
+                        step: 5,
                     },
                      { merge: true } // Usar merge para actualizar sin sobrescribir todo el documento
                 );
-
+                
                 Alert.alert("Éxito", "Tus selecciones se han guardado en Firebase");
                 goToNextStep();
             } else {
@@ -140,7 +140,7 @@ const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lugares Turísticos</Text>
+            <Text style={styles.title}>Preferencias en Comidas</Text>
             <Text style={styles.progressText}>Progreso: {progress}/{data.length}</Text>
             {data.length > 0 ? (
                 <Swiper
@@ -159,7 +159,7 @@ const TouristPlaces = ({goToNextStep}: {goToNextStep: () => void}) => {
                     stackSize={3}
                 />
             ) : (
-                <Text style={styles.noDataText}>No hay más lugares turísticos</Text>
+                <Text style={styles.noDataText}>No hay más preferencias de comidas</Text>
             )}
             <TouchableOpacity style={styles.saveButton} onPress={saveToFirebase}>
                 <Text style={styles.saveButtonText}>Guardar y continuar</Text>
@@ -238,4 +238,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TouristPlaces;
+export default TouristFoods;
