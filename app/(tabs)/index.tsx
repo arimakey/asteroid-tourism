@@ -18,6 +18,8 @@ import Step3Preguntas from "@/src/components/step3/Step3Preguntas";
 import Step4Foods from "@/src/components/step4/Step4Foods";
 import Step5FoodsPreguntas from "@/src/components/step5/Step5FoodsPreguntas";
 
+import ItinerarioResultados from "@/src/components/itinerario/ItinerarioResultados";
+
 export default function HomeScreen() {
   const route = useRouter();
   const { user, logout } = useAuth();
@@ -49,6 +51,7 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
+      <ItinerarioResultados />
     </View>
   );
 }
