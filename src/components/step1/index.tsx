@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, collection, getDocs } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { firestoreDB } from "../../../firebaseConfig";
 import { User } from "firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 
-const Step1 = () => {
+const Step1 = ({goToNextStep}: {goToNextStep: () => void}) => {
   const [user, setUser] = useState<User | null>(null);
   const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
   const [selectedCity, setSelectedCity] = useState("");
@@ -45,32 +45,111 @@ const Step1 = () => {
     fetchCities();
   }, []);
 
+
+  const handleSaveUserWithReferences = async () => {
+    if (user && selectedCity && startDate && endDate) {
+      try {
+        const userRef = doc(firestoreDB, "users", user.uid);
+        const selectionRef = collection(firestoreDB, "selections");
+        const cityRef = doc(firestoreDB, "cities", selectedCity);
+
+        const q = query(selectionRef, where("user", "==", userRef));
+
+        const snapshot = await getDocs(q);
+        
+        const selections: any = [];
+        snapshot.forEach((doc) => {
+          selections.push({ id: doc.id, ...doc.data() });
+        })
+
+        const documentId = selections[0]?.id
+
+        if (documentId) {
+          const selectionRef = doc(firestoreDB, "selections", documentId);
+
+          const selectionData = {
+            user: userRef,
+            start_date: startDate,
+            end_date: endDate,
+            city: cityRef,
+            step: 1,
+          };
+
+          await setDoc(selectionRef, selectionData, { merge: true });
+          alert("Datos actualizados exitosamente en selections!");
+        } else {
+
+          const newSelectionRef = doc(collection(firestoreDB, "selections"));
+          const selectionData = {
+            user: userRef,
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+            city: cityRef,
+            step: 1,
+          };
+
+          await setDoc(newSelectionRef, selectionData);
+          alert("Datos guardados exitosamente en selections!");
+        }
+
+
+
+        alert("Datos guardados exitosamente en selections!");
+        goToNextStep();
+      } catch (error) {
+        console.error("Error al guardar los datos en selections:", error);
+        alert("Error al guardar los datos en selections.");
+      }
+    } else {
+      alert("Por favor, selecciona una ciudad y ambas fechas.");
+    }
+  }
   const handleSaveUser = async () => {
     if (user && selectedCity && startDate && endDate) {
       try {
-        const selectionRef = doc(firestoreDB, "selections", "arTZLoguyAkWmjrfEsrMA");
-
-        await setDoc(
-          selectionRef,
-          {
-            user: `/users/${user.uid}`,
-            start_date: startDate.toISOString(),
-            end_date: endDate.toISOString(),
-            city: `/cities/${selectedCity}`,
-            step: 1,
-          },
-          { merge: true }
-        );
-
-        alert("Data saved successfully in selections!");
+        // Buscar si ya existe un documento en la colección `selections` para el usuario actual
+        const selectionsQuery = await getDocs(collection(firestoreDB, "selections"));
+        let documentId = null;
+  
+        selectionsQuery.forEach((doc) => {
+          if (doc.data().user === `/users/${user.uid}`) {
+            documentId = doc.id; // Guardar el ID del documento encontrado
+          }
+        });
+  
+        console.log("Usuario actual:", user.uid);
+        console.log("ID del documento encontrado:", documentId);
+  
+        const selectionData = {
+          user: `/users/${user.uid}`,
+          start_date: startDate.toISOString(),
+          end_date: endDate.toISOString(),
+          city: `/cities/${selectedCity}`,
+          step: 1,
+        };
+  
+        if (documentId) {
+          // Si existe el documento, solo actualizamos los campos necesarios
+          const selectionRef = doc(firestoreDB, "selections", documentId);
+          await setDoc(selectionRef, selectionData, { merge: true });
+          alert("Datos actualizados exitosamente en selections!");
+        } else {
+          // Si no existe, creamos un nuevo documento con un ID generado automáticamente
+          const newSelectionRef = doc(collection(firestoreDB, "selections"));
+          await setDoc(newSelectionRef, selectionData);
+          alert("Datos guardados exitosamente en selections!");
+        }
+  
+        goToNextStep();
       } catch (error) {
-        console.error("Error saving data in selections: ", error);
-        alert("Error saving data in selections.");
+        console.error("Error al guardar los datos en selections:", error);
+        alert("Error al guardar los datos en selections.");
       }
     } else {
-      alert("Please select a city and both dates.");
+      alert("Por favor, selecciona una ciudad y ambas fechas.");
     }
   };
+  
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || (showPicker.mode === "start" ? startDate : endDate);
@@ -80,10 +159,14 @@ const Step1 = () => {
     }
     
     if (currentDate) {
+      // Ajustar la fecha restando un día
+      const adjustedDate = new Date(currentDate);
+      adjustedDate.setUTCHours(12, 0, 0, 0);
+
       if (showPicker.mode === "start") {
-        setStartDate(currentDate);
+        setStartDate(adjustedDate);
       } else {
-        setEndDate(currentDate);
+        setEndDate(adjustedDate);
       }
     }
   };
@@ -151,7 +234,7 @@ const Step1 = () => {
 
             <CustomButton 
               title="Guardar"
-              onPress={handleSaveUser}
+              onPress={handleSaveUserWithReferences}
               style={styles.saveButton}
             />
           </>

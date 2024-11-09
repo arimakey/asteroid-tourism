@@ -12,10 +12,11 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/src/context/authContext";
-import Festivity from "@/app/(tabs)/festivity/index";
-import TypicalDish from "@/app/(tabs)/typical_dish/index";
-import Places from "@/app/(tabs)/places/index";
-import SwipeCard from "@/src/components/step3/pagina3"
+import Step1Primis from "@/src/components/step1/index";
+import Step2Categorias from "@/src/components/step2/Step2Categorias";
+import Step3Preguntas from "@/src/components/step3/Step3Preguntas";
+import Step4Foods from "@/src/components/step4/Step4Foods";
+import Step5FoodsPreguntas from "@/src/components/step5/Step5FoodsPreguntas";
 
 export default function HomeScreen() {
   const route = useRouter();
@@ -48,7 +49,6 @@ export default function HomeScreen() {
           <Text className="text-white">Logout</Text>
         </TouchableOpacity>
       </View>
-      <SwipeCard/>
     </View>
   );
 }
